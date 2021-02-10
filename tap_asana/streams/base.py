@@ -64,12 +64,14 @@ def invalid_token_handler(details):
 
 
 def asana_error_handling(fnc):
-    LOGGER.info("ATTENTION: Asana Error Handling function used")
     @backoff.on_exception(backoff.expo,
                           InvalidTokenError,
                           on_backoff=invalid_token_handler)
     @backoff.on_exception(backoff.expo,
                           TokenExpiredError,
+                          on_backoff=invalid_token_handler)
+    @backoff.on_exception(backoff.expo,
+                          NoAuthorizationError,
                           on_backoff=invalid_token_handler)
     @backoff.on_exception(backoff.expo,
                           (simplejson.scanner.JSONDecodeError,
