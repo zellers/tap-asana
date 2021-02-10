@@ -1,3 +1,4 @@
+import singer
 
 from singer import utils
 from tap_asana.context import Context
@@ -46,6 +47,8 @@ class Projects(Stream):
         iter += 1
         if iter > 5:
           Context.asana.refresh_access_token()
+          LOGGER = singer.get_logger()
+          LOGGER.info("ATTENTION: Starting Tasks Sync")
         if self.is_bookmark_old(project[self.replication_key]):
           yield project
     self.update_bookmark(session_bookmark)
