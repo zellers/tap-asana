@@ -9,7 +9,7 @@ import time
 from singer.messages import StateMessage
 from tap_asana.asana import Asana
 from asana.error import AsanaError, NoAuthorizationError, RetryableAsanaError, InvalidTokenError, RateLimitEnforcedError
-from oauthlib.oauth2 import TokenExpiredError
+import oauthlib.oauth2
 from singer import utils
 from tap_asana.context import Context
 
@@ -66,12 +66,6 @@ def invalid_token_handler(details):
 def asana_error_handling(fnc):
     @backoff.on_exception(backoff.expo,
                           InvalidTokenError,
-                          on_backoff=invalid_token_handler)
-    @backoff.on_exception(backoff.expo,
-                          TokenExpiredError,
-                          on_backoff=invalid_token_handler)
-    @backoff.on_exception(backoff.expo,
-                          NoAuthorizationError,
                           on_backoff=invalid_token_handler)
     @backoff.on_exception(backoff.expo,
                           (simplejson.scanner.JSONDecodeError,

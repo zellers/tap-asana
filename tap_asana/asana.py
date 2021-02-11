@@ -21,12 +21,14 @@ class Asana(object):
     if self.client_id is None or self.client_secret is None or self.redirect_uri is None or self.refresh_token is None:
       LOGGER.debug("OAuth authentication unavailable.")
       return None
+    asana.Client.headers = {'asana-enable': 'new_user_task_lists'}
     return asana.Client.oauth(client_id=self.client_id, client_secret=self.client_secret, redirect_uri=self.redirect_uri)
 
   def _access_token_auth(self):
     if self.access_token is None:
       LOGGER.debug("OAuth authentication unavailable.")
       return None
+    asana.Client.headers = {'asana-enable': 'new_user_task_lists'}
     return asana.Client.access_token(self.access_token)
 
   def refresh_access_token(self):
