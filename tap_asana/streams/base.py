@@ -150,7 +150,6 @@ class Stream():
     def call_api(self, resource, **query_params):
         fn = getattr(Context.asana.client, resource)
         try:
-            Asana.client.headers = {'asana-enable': 'new_user_task_lists'}
             if query_params:
                 return fn.find_all(**query_params)
             return fn.find_all()
