@@ -154,7 +154,10 @@ class Stream():
                 return fn.find_all(**query_params)
             return fn.find_all()
         except TokenExpiredError as TEE:
-            LOGGER.info("ATTENTION: Exception Caught in call_api")
+            LOGGER.info("ATTENTION: Exception Caught in call_api",TEE)
+            invalid_token_handler()
+        except Exception as e:
+            LOGGER.info("ATTENTION: Generic exception caught in call_api",e)
             invalid_token_handler()
 
 
