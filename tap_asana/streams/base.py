@@ -9,7 +9,7 @@ import time
 from singer.messages import StateMessage
 from tap_asana.asana import Asana
 from asana.error import AsanaError, NoAuthorizationError, RetryableAsanaError, InvalidTokenError, RateLimitEnforcedError
-import oauthlib.oauth2
+from oauthlib.oauth2 import TokenExpiredError
 from singer import utils
 from tap_asana.context import Context
 
@@ -149,9 +149,15 @@ class Stream():
     @asana_error_handling
     def call_api(self, resource, **query_params):
         fn = getattr(Context.asana.client, resource)
-        if query_params:
-            return fn.find_all(**query_params)
-        return fn.find_all()
+        try:
+            Asana.client.headers = {'asana-enable': 'new_user_task_lists'}
+            if query_params:
+                return fn.find_all(**query_params)
+            return fn.find_all()
+        except TokenExpiredError as TEE:
+            LOGGER.info("ATTENTION: Exception Caught in call_api")
+            invalid_token_handler()
+
 
     def sync(self):
         """Yield's processed SDK object dicts to the caller.
