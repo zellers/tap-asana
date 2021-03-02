@@ -149,16 +149,10 @@ class Stream():
     @asana_error_handling
     def call_api(self, resource, **query_params):
         fn = getattr(Context.asana.client, resource)
-        try:
-            if query_params:
-                return fn.find_all(**query_params)
-            return fn.find_all()
-        except TokenExpiredError as TEE:
-            LOGGER.info("ATTENTION: Exception Caught in call_api",TEE)
-            invalid_token_handler()
-        except Exception as e:
-            LOGGER.info("ATTENTION: Generic exception caught in call_api",e)
-            invalid_token_handler()
+
+        if query_params:
+            return fn.find_all(**query_params)
+        return fn.find_all()
 
 
     def sync(self):

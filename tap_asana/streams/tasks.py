@@ -1,10 +1,11 @@
 
 from singer import utils
 import singer
-from oauthlib.oauth2 import TokenExpiredError
 from tap_asana.streams.base import invalid_token_handler
 from tap_asana.context import Context
 from tap_asana.streams.base import Stream
+from oauthlib.oauth2 import TokenExpiredError
+
 
 
 class Tasks(Stream):
@@ -67,10 +68,10 @@ class Tasks(Stream):
               yield task
     except TokenExpiredError as TEE:
       LOGGER.info("ATTENTION: Exception Caught in tasks get_objects", TEE)
-      invalid_token_handler()
+      invalid_token_handler(TEE)
     except Exception as e:
-      LOGGER.info("ATTENTION: Generic exception caught in call_api", e)
-      invalid_token_handler()
+      LOGGER.info("ATTENTION: Generic exception caught in get_objects", e)
+      invalid_token_handler(e)
     self.update_bookmark(session_bookmark)
 
 
