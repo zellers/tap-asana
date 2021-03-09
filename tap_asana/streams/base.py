@@ -146,13 +146,17 @@ class Stream():
         return session_bookmark
 
 
-    @asana_error_handling
+    # @asana_error_handling
     def call_api(self, resource, **query_params):
-        fn = getattr(Context.asana.client, resource)
-        LOGGER.info("Call API")
-        if query_params:
-            return fn.find_all(**query_params)
-        return fn.find_all()
+        try:
+            fn = getattr(Context.asana.client, resource)
+            LOGGER.info("Call API")
+            if query_params:
+                return fn.find_all(**query_params)
+            return fn.find_all()
+        except Exception as e:
+            LOGGER.log("Call_API Error caught")
+            LOGGER.log(e)
 
 
     def sync(self):
