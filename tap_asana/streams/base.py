@@ -155,8 +155,8 @@ class Stream():
                 return fn.find_all(**query_params)
             return fn.find_all()
         except Exception as e:
-            LOGGER.log("Call_API Error caught")
-            LOGGER.log(e)
+            LOGGER.info("Call_API Error caught")
+            LOGGER.info(e)
 
 
     def sync(self):

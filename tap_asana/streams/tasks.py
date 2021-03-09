@@ -66,9 +66,9 @@ class Tasks(Stream):
       for project in projects:
         tasks = self.call_api("tasks", project=project["gid"], opt_fields=opt_fields, modified_since=modified_since)
         for task in tasks:
-          LOGGER.log("Before Bookmark")
+          LOGGER.info("Before Bookmark")
           session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
-          LOGGER.log("After Bookmark")
+          LOGGER.info("After Bookmark")
           if self.is_bookmark_old(task[self.replication_key]):
             yield task
     # except TokenExpiredError as TEE:
