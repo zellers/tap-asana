@@ -78,12 +78,6 @@ class Tasks(Stream):
           session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
           if self.is_bookmark_old(task[self.replication_key]):
             yield task
-    # except TokenExpiredError as TEE:
-    #   LOGGER.info("ATTENTION: TokenExpiredError exception caught in tasks get_objects")
-    #   invalid_token_handler(TEE)
-    # except Exception as e:
-    #   LOGGER.info("ATTENTION: Generic exception caught in tasks get_objects")
-    #   invalid_token_handler(e)
     self.update_bookmark(session_bookmark)
 
 

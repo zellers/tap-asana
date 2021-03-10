@@ -30,8 +30,8 @@ class Asana(object):
     return asana.Client.access_token(self.access_token)
 
   def refresh_access_token(self):
-    if self._client.session.authorized:
-      return
+    # if self._client.session.authorized:
+    #   return
     LOGGER.info("ATTENTION: refresh_access_token function in asana.py used")
     return self._client.session.refresh_token(self._client.session.token_url, client_id=self.client_id, client_secret=self.client_secret, refresh_token=self.refresh_token)
 
