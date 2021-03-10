@@ -5,6 +5,7 @@ from tap_asana.streams.base import invalid_token_handler
 from tap_asana.context import Context
 from tap_asana.streams.base import Stream
 from oauthlib.oauth2 import TokenExpiredError
+import time
 
 
 
@@ -59,11 +60,19 @@ class Tasks(Stream):
     session_bookmark = bookmark
     modified_since = bookmark.strftime("%Y-%m-%dT%H:%M:%S.%f")
     opt_fields = ",".join(self.fields)
-    # try:
+
+    #Refreshing token at the start of tasks
+    Context.asana.refresh_access_token()
+    start_timer = time.time()
+
     workspaces = self.call_api("workspaces")
     for workspace in workspaces:
       projects = self.call_api("projects", workspace=workspace["gid"])
       for project in projects:
+        if (time.time() - start_timer) % 2700 == 0:
+          LOGGER.info("ATTENTION: 45 min passed since start of task sync, refreshing token")
+          Context.asana.refresh_access_token()
+
         tasks = self.call_api("tasks", project=project["gid"], opt_fields=opt_fields, modified_since=modified_since)
         for task in tasks:
           LOGGER.info("Before Bookmark")

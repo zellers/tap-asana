@@ -58,8 +58,6 @@ def retry_after_wait_gen(**kwargs):
 
 
 def invalid_token_handler(details):
-    LOGGER.info("ATTENTION: InvalidTokenError Function here")
-    LOGGER.info("Received InvalidTokenError, refreshing access token")
     Context.asana.refresh_access_token()
 
 
@@ -146,17 +144,12 @@ class Stream():
         return session_bookmark
 
 
-    # @asana_error_handling
+    @asana_error_handling
     def call_api(self, resource, **query_params):
-        try:
-            fn = getattr(Context.asana.client, resource)
-            LOGGER.info("Call API")
-            if query_params:
-                return fn.find_all(**query_params)
-            return fn.find_all()
-        except Exception as e:
-            LOGGER.info("Call_API Error caught")
-            LOGGER.info(e)
+        fn = getattr(Context.asana.client, resource)
+        if query_params:
+            return fn.find_all(**query_params)
+        return fn.find_all()
 
 
     def sync(self):
