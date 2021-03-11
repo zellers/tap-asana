@@ -65,9 +65,7 @@ class Tasks(Stream):
         workspaces = self.call_api("workspaces")
         for workspace in workspaces:
             projects = self.call_api("projects", workspace=workspace["gid"])
-            LOGGER.info("projects type (workspace loop):", type(projects))
             for project in projects:
-                LOGGER.info("project type (projects loop):", type(project))
                 if (time.time() - start_timer) > 2400:
                     LOGGER.info("ATTENTION: 40 min passed, refreshing token")
                     Context.asana.refresh_access_token()

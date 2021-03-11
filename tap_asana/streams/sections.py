@@ -34,7 +34,6 @@ class Sections(Stream):
 
         for workspace in self.call_api("workspaces"):
             for project in self.call_api("projects", workspace=workspace["gid"]):
-                LOGGER.info(type(project))
                 for section in Context.asana.client.sections.get_sections_for_project(project_gid=project["gid"],
                                                                                       owner="me",
                                                                                       opt_fields=opt_fields):
