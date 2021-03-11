@@ -34,11 +34,12 @@ class Sections(Stream):
 
         for workspace in self.call_api("workspaces"):
             for project in self.call_api("projects", workspace=workspace["gid"]):
+                LOGGER.info(type(project))
                 for section in Context.asana.client.sections.get_sections_for_project(project_gid=project["gid"],
                                                                                       owner="me",
                                                                                       opt_fields=opt_fields):
-                    if (time.time() - start_timer) > 2700:
-                        LOGGER.info("ATTENTION: 45 min passed since start of sections sync, refreshing token")
+                    if (time.time() - start_timer) > 2400:
+                        LOGGER.info("ATTENTION: 40 min passed, refreshing token")
                         Context.asana.refresh_access_token()
                         start_timer = time.time()  # start timer over
                     yield section
