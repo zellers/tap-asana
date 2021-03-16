@@ -67,7 +67,7 @@ class Tasks(Stream):
             projects = self.call_api("projects", workspace=workspace["gid"])
             for project in projects:
                 if (time.time() - start_timer) > 1800:
-                    LOGGER.info("ATTENTION: 40 min passed, refreshing token")
+                    LOGGER.info("ATTENTION: 30 min passed, refreshing token")
                     Context.asana.refresh_access_token()
                     start_timer = time.time()  # start timer over
 
