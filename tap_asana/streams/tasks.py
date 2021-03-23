@@ -71,6 +71,8 @@ class Tasks(Stream):
                 all_projects_gid.append(project["gid"])
 
         for p_gid in all_projects_gid:
+            LOGGER.info("Next Project")
+            LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                       modified_since=modified_since)
             if len(list(tasks)) == 0:
@@ -78,6 +80,8 @@ class Tasks(Stream):
 
             all_tasks_list_ids = []
             self.get_all_tasks(tasks, all_tasks_list_ids)
+
+            LOGGER.INFO(all_tasks_list_ids)
 
             for task_id in all_tasks_list_ids:
                 task = Context.asana.client.tasks.find_by_id(task_id)
