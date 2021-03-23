@@ -75,17 +75,19 @@ class Tasks(Stream):
             LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                       modified_since=modified_since)
+            print()
             if len(list(tasks)) == 0:
                 continue
 
             all_tasks_list_ids = []
             self.get_all_tasks(tasks, all_tasks_list_ids)
 
-            LOGGER.INFO(all_tasks_list_ids)
+            LOGGER.info(all_tasks_list_ids)
 
             for task_id in all_tasks_list_ids:
                 task = Context.asana.client.tasks.find_by_id(task_id)
                 yield task
+                LOGGER.info("Yielded Task")
             # for task in tasks:
             #     if (time.time() - start_timer) > 1800:
             #         LOGGER.info("ATTENTION: 30 min passed, refreshing token")
