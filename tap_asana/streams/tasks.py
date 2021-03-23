@@ -62,21 +62,44 @@ class Tasks(Stream):
         Context.asana.refresh_access_token()
         start_timer = time.time()
 
+        #Put all project ids into a list
         workspaces = self.call_api("workspaces")
+        all_projects_gid = []
         for workspace in workspaces:
             projects = self.call_api("projects", workspace=workspace["gid"])
             for project in projects:
-                tasks = self.call_api("tasks", project=project["gid"], opt_fields=opt_fields,
+                all_projects_gid.append(project["gid"])
+
+        for p_gid in all_projects_gid:
+            tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                       modified_since=modified_since)
-                for task in tasks:
-                    if (time.time() - start_timer) > 1800:
-                        LOGGER.info("ATTENTION: 30 min passed, refreshing token")
-                        Context.asana.refresh_access_token()
-                        start_timer = time.time()  # start timer over
-                    session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
-                    if self.is_bookmark_old(task[self.replication_key]):
-                        yield task
+            if len(list(tasks)) == 0:
+                continue
+
+            self.get_all_tasks(tasks)
+            # for task in tasks:
+            #     if (time.time() - start_timer) > 1800:
+            #         LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+            #         Context.asana.refresh_access_token()
+            #         start_timer = time.time()  # start timer over
+            #     session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
+            #     if self.is_bookmark_old(task[self.replication_key]):
+            #         yield task
+
         self.update_bookmark(session_bookmark)
+
+    def get_all_tasks(self, tasks):
+
+        for task in tasks:
+            session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
+            if self.is_bookmark_old(task[self.replication_key]):
+                yield task
+            subtasks = Context.asana.client.tasks.subtasks(task["gid"])
+            if len(list(subtasks)) == 0:
+                continue
+            else:
+                self.get_all_tasks(subtasks)
+
 
 
 Context.stream_objects['tasks'] = Tasks
