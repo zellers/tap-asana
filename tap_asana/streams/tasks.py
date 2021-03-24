@@ -75,12 +75,13 @@ class Tasks(Stream):
             LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                       modified_since=modified_since)
-            LOGGER.info("Tasks as generator")
-            LOGGER.info(tasks)
-            LOGGER.info("Tasks as List")
-            LOGGER.info(list(tasks))
-            if len(list(tasks)) == 0:
+            counter = 0
+            for task in tasks:
+                LOGGER.log(task)
+                counter += 1
+            if counter == 0:
                 continue
+
 
             all_tasks_list_ids = []
             self.get_all_tasks(tasks, all_tasks_list_ids)
