@@ -101,6 +101,7 @@ class Tasks(Stream):
                     start_timer = time.time()  # start timer over
                 session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
                 if self.is_bookmark_old(task[self.replication_key]):
+                    LOGGER.info(task)
                     yield task
 
         self.update_bookmark(session_bookmark)
