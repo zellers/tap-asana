@@ -78,7 +78,7 @@ class Tasks(Stream):
             LOGGER.info(tasks)
             counter = 0
             for task in tasks:
-                LOGGER.log(task)
+                LOGGER.log(task["gid"])
                 counter += 1
             if counter == 0:
                 continue
