@@ -75,7 +75,7 @@ class Tasks(Stream):
             LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                   modified_since=modified_since)
-            LOGGER.info(tasks.items)
+            LOGGER.info(tasks)
             counter = 0
             for task in tasks:
                 LOGGER.log(task)
