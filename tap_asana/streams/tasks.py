@@ -93,17 +93,17 @@ class Tasks(Stream):
             #     task = Context.asana.client.tasks.find_by_id(task_id)
             #     yield task
             #     LOGGER.info("Yielded Task")
-
+            task_list = []
             for task in tasks:
                 if (time.time() - start_timer) > 1800:
                     LOGGER.info("ATTENTION: 30 min passed, refreshing token")
                     Context.asana.refresh_access_token()
                     start_timer = time.time()  # start timer over
+                task_list.append(task["gid"])
                 session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
-                LOGGER.info(task["gid"])
                 if self.is_bookmark_old(task[self.replication_key]):
-                    LOGGER.info(task["gid"])
                     yield task
+            LOGGER.info(task_list)
 
         self.update_bookmark(session_bookmark)
 
