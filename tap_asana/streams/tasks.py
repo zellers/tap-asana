@@ -100,8 +100,9 @@ class Tasks(Stream):
                     Context.asana.refresh_access_token()
                     start_timer = time.time()  # start timer over
                 session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
+                LOGGER.info(task["gid"])
                 if self.is_bookmark_old(task[self.replication_key]):
-                    LOGGER.info(task)
+                    LOGGER.info(task["gid"])
                     yield task
 
         self.update_bookmark(session_bookmark)
