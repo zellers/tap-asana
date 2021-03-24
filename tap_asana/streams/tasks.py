@@ -71,35 +71,37 @@ class Tasks(Stream):
                 all_projects_gid.append(project["gid"])
 
         for p_gid in all_projects_gid:
-            LOGGER.info("Next Project")
-            LOGGER.info(p_gid)
+            # LOGGER.info("Next Project")
+            # LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                   modified_since=modified_since)
-            LOGGER.info(tasks)
-            counter = 0
-            for task in tasks:
-                LOGGER.info(task["gid"])
-                counter += 1
-            if counter == 0:
-                continue
 
-            all_tasks_list_ids = []
-            self.get_all_tasks(tasks, all_tasks_list_ids)
-
-            LOGGER.info(all_tasks_list_ids)
-
-            for task_id in all_tasks_list_ids:
-                task = Context.asana.client.tasks.find_by_id(task_id)
-                yield task
-                LOGGER.info("Yielded Task")
+            # LOGGER.info(tasks)
+            # counter = 0
             # for task in tasks:
-            #     if (time.time() - start_timer) > 1800:
-            #         LOGGER.info("ATTENTION: 30 min passed, refreshing token")
-            #         Context.asana.refresh_access_token()
-            #         start_timer = time.time()  # start timer over
-            #     session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
-            #     if self.is_bookmark_old(task[self.replication_key]):
-            #         yield task
+            #     LOGGER.info(task["gid"])
+            #     counter += 1
+            # if counter == 0:
+            #     continue
+            #
+            # all_tasks_list_ids = []
+            # self.get_all_tasks(tasks, all_tasks_list_ids)
+            #
+            # LOGGER.info(all_tasks_list_ids)
+            #
+            # for task_id in all_tasks_list_ids:
+            #     task = Context.asana.client.tasks.find_by_id(task_id)
+            #     yield task
+            #     LOGGER.info("Yielded Task")
+
+            for task in tasks:
+                if (time.time() - start_timer) > 1800:
+                    LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+                    Context.asana.refresh_access_token()
+                    start_timer = time.time()  # start timer over
+                session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
+                if self.is_bookmark_old(task[self.replication_key]):
+                    yield task
 
         self.update_bookmark(session_bookmark)
 
