@@ -62,7 +62,7 @@ class Tasks(Stream):
         Context.asana.refresh_access_token()
         start_timer = time.time()
 
-        #Put all project ids into a list
+        # Put all project ids into a list
         workspaces = self.call_api("workspaces")
         all_projects_gid = []
         for workspace in workspaces:
@@ -74,14 +74,14 @@ class Tasks(Stream):
             LOGGER.info("Next Project")
             LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
-                                      modified_since=modified_since)
+                                  modified_since=modified_since)
+            LOGGER.info(tasks.items)
             counter = 0
             for task in tasks:
                 LOGGER.log(task)
                 counter += 1
             if counter == 0:
                 continue
-
 
             all_tasks_list_ids = []
             self.get_all_tasks(tasks, all_tasks_list_ids)
@@ -114,7 +114,6 @@ class Tasks(Stream):
                 continue
             else:
                 self.get_all_tasks(subtasks, all_tasks_list_ids)
-
 
 
 Context.stream_objects['tasks'] = Tasks
