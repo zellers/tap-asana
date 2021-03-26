@@ -95,8 +95,12 @@ class Tasks(Stream):
             if len(all_subtasks_ids) > 0:
                 LOGGER.info(all_subtasks_ids)
                 for task_id in all_subtasks_ids:
-                    subtask = Context.asana.client.tasks.find_by_id(task_id)
-                    yield subtask
+                    try:
+                        subtask = Context.asana.client.tasks.find_by_id(task_id)
+                        yield subtask
+                    except Exception as e:
+                        LOGGER.info("Skipping a subtask, exception occurred")
+                        LOGGER.info(e)
 
         self.update_bookmark(session_bookmark)
 
