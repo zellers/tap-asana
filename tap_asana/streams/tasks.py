@@ -71,8 +71,8 @@ class Tasks(Stream):
                 all_projects_gid.append(project["gid"])
 
         for p_gid in all_projects_gid:
-            # LOGGER.info("Next Project")
-            # LOGGER.info(p_gid)
+            LOGGER.info("Next Project")
+            LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                   modified_since=modified_since)
 
@@ -87,10 +87,13 @@ class Tasks(Stream):
                 if self.is_bookmark_old(task[self.replication_key]):
                     yield task
 
+            LOGGER.info(task_list)
+
             all_subtasks_ids = []
             if len(task_list) > 0:
                 self.get_all_tasks(task_list, all_subtasks_ids)
             if len(all_subtasks_ids) > 0:
+                LOGGER.info(all_subtasks_ids)
                 for task_id in all_subtasks_ids:
                     subtask = Context.asana.client.tasks.find_by_id(task_id)
                     yield subtask
