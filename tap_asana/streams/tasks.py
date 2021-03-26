@@ -87,12 +87,8 @@ class Tasks(Stream):
 
             all_subtasks_ids = []
             if len(task_list) > 0:
-                LOGGER.info("Tasks:")
-                LOGGER.info(task_list)
                 self.get_all_tasks(task_list, all_subtasks_ids)
             if len(all_subtasks_ids) > 0:
-                LOGGER.info("All Subtasks:")
-                LOGGER.info(all_subtasks_ids)
                 for task_id in all_subtasks_ids:
                     try:
                         subtask = Context.asana.client.tasks.find_by_id(task_id)
