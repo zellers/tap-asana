@@ -138,7 +138,11 @@ def sync():
                 extraction_time = singer.utils.now()
                 record_schema = catalog_entry['schema']
                 record_metadata = metadata.to_map(catalog_entry['metadata'])
-                rec = transformer.transform(rec, record_schema, record_metadata)
+                try:
+                    rec = transformer.transform(rec, record_schema, record_metadata)
+                except Exception as e:
+                    LOGGER.info("Skipping a task due to transformation error..")
+                    LOGGER.info(e)
                 singer.write_record(stream_id,
                                     rec,
                                     time_extracted=extraction_time)
