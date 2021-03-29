@@ -140,13 +140,14 @@ def sync():
                 record_metadata = metadata.to_map(catalog_entry['metadata'])
                 try:
                     rec = transformer.transform(rec, record_schema, record_metadata)
+
+                    singer.write_record(stream_id,
+                                        rec,
+                                        time_extracted=extraction_time)
+                    Context.counts[stream_id] += 1
                 except Exception as e:
                     LOGGER.info("Skipping a task due to transformation error..")
                     LOGGER.info(e)
-                singer.write_record(stream_id,
-                                    rec,
-                                    time_extracted=extraction_time)
-                Context.counts[stream_id] += 1
 
         Context.state['bookmarks'].pop('currently_sync_stream')
         singer.write_state(Context.state)

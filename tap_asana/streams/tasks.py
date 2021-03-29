@@ -92,7 +92,10 @@ class Tasks(Stream):
                 for task_id in all_subtasks_ids:
                     try:
                         subtask = Context.asana.client.tasks.find_by_id(task_id)
-                        yield subtask
+                        session_bookmark = self.get_updated_session_bookmark(session_bookmark,
+                                                                             subtask[self.replication_key])
+                        if self.is_bookmark_old(subtask[self.replication_key]):
+                            yield subtask
                     except Exception as e:
                         LOGGER.info("Skipping a subtask, exception occurred")
                         LOGGER.info(e)
