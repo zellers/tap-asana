@@ -104,12 +104,14 @@ class Tasks(Stream):
 
     def get_all_tasks(self, task_list, all_subtasks_ids):
         for id in task_list:
+            temp_subtasks = []
             subtasks = Context.asana.client.tasks.subtasks(id)
             for subtask in subtasks:
-                all_subtasks_ids.append(subtask["gid"])
+                all_subtasks_ids.append(subtask["gid"])  # add subtask id to the full id list
+                temp_subtasks.append(subtask["gid"])  # add subtask id to a list for this specific task
 
-            if len(all_subtasks_ids) > 0:
-                self.get_all_tasks(subtasks, all_subtasks_ids)
+            if len(temp_subtasks) > 0:  # If there are any subtasks for this given task, call the function recursively and check for nested subtasks
+                self.get_all_tasks(temp_subtasks, all_subtasks_ids)
 
 
 Context.stream_objects['tasks'] = Tasks
