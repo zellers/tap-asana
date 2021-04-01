@@ -87,8 +87,12 @@ class Tasks(Stream):
 
             all_subtasks_ids = []
             if len(task_list) > 0:
-                self.get_all_tasks(task_list, all_subtasks_ids)
+                self.get_all_tasks(task_list, all_subtasks_ids,start_timer)
             if len(all_subtasks_ids) > 0:
+                if (time.time() - start_timer) > 1800:
+                    LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+                    Context.asana.refresh_access_token()
+                    start_timer = time.time()  # start timer over
                 for task_id in all_subtasks_ids:
                     try:
                         subtask = Context.asana.client.tasks.find_by_id(task_id)
@@ -102,7 +106,12 @@ class Tasks(Stream):
 
         self.update_bookmark(session_bookmark)
 
-    def get_all_tasks(self, task_list, all_subtasks_ids):
+    def get_all_tasks(self, task_list, all_subtasks_ids, start_timer):
+        if (time.time() - start_timer) > 1800:
+            LOGGER = singer.get_logger()
+            LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+            Context.asana.refresh_access_token()
+            start_timer = time.time()  # start timer over
         for id in task_list:
             temp_subtasks = []
             subtasks = Context.asana.client.tasks.subtasks(id)
@@ -111,7 +120,7 @@ class Tasks(Stream):
                 temp_subtasks.append(subtask["gid"])  # add subtask id to a list for this specific task
 
             if len(temp_subtasks) > 0:  # If there are any subtasks for this given task, call the function recursively and check for nested subtasks
-                self.get_all_tasks(temp_subtasks, all_subtasks_ids)
+                self.get_all_tasks(temp_subtasks, all_subtasks_ids, start_timer)
 
 
 Context.stream_objects['tasks'] = Tasks
