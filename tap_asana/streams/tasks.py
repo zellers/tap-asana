@@ -62,9 +62,7 @@ class Tasks(Stream):
 
         # Refreshing token at the start of tasks
         Context.asana.refresh_access_token()
-        LOGGER.info(self.start_time)
         self.start_time = time.time()
-        LOGGER.info(self.start_time)
 
         # Put all project ids into a list
         workspaces = self.call_api("workspaces")
@@ -101,6 +99,7 @@ class Tasks(Stream):
                     except Exception as e:
                         LOGGER.info("Skipping a subtask, exception occurred")
                         LOGGER.info(e)
+                        Context.asana.refresh_access_token()
 
         self.update_bookmark(session_bookmark)
 
@@ -118,6 +117,9 @@ class Tasks(Stream):
 
     def timer_check(self):
         LOGGER = singer.get_logger()
+        LOGGER.info("checking time passed in timer_check")
+        LOGGER.info(time.time())
+        LOGGER.info(self.start_time)
         if (time.time() - self.start_time) > 1800:
             LOGGER.info("ATTENTION: 30 min passed, refreshing token")
             Context.asana.refresh_access_token()
