@@ -62,7 +62,9 @@ class Tasks(Stream):
 
         # Refreshing token at the start of tasks
         Context.asana.refresh_access_token()
+        LOGGER.info(self.start_time)
         self.start_time = time.time()
+        LOGGER.info(self.start_time)
 
         # Put all project ids into a list
         workspaces = self.call_api("workspaces")
