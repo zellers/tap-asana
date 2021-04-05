@@ -117,7 +117,6 @@ class Tasks(Stream):
 
     def timer_check(self):
         LOGGER = singer.get_logger()
-        LOGGER.info("checking time passed in timer_check")
         if (time.time() - self.start_time) > 1800:
             LOGGER.info("ATTENTION: 30 min passed, refreshing token")
             Context.asana.refresh_access_token()
