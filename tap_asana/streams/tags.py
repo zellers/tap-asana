@@ -1,4 +1,4 @@
-
+import singer
 import time
 from singer import utils
 from tap_asana.context import Context
@@ -23,6 +23,8 @@ class Tags(Stream):
 
 
   def get_objects(self):
+    LOGGER = singer.get_logger()
+    LOGGER.info("ATTENTION: Starting Tags Sync")
     opt_fields = ",".join(self.fields)
     bookmark = self.get_bookmark()
     session_bookmark = bookmark

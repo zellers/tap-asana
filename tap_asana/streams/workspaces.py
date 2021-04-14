@@ -1,4 +1,4 @@
-
+import singer
 from tap_asana.context import Context
 from tap_asana.streams.base import Stream
 
@@ -16,6 +16,9 @@ class Workspaces(Stream):
   ]
 
   def get_objects(self):
+    LOGGER = singer.get_logger()
+    LOGGER.info("ATTENTION: Starting Workspaces Sync")
+
     opt_fields = ",".join(self.fields)
     for workspace in self.call_api("workspaces", opt_fields=opt_fields):
       yield workspace

@@ -1,3 +1,4 @@
+import singer
 
 from tap_asana.context import Context
 from tap_asana.streams.base import Stream
@@ -18,6 +19,10 @@ class Teams(Stream):
 
 
   def get_objects(self):
+    LOGGER = singer.get_logger()
+    LOGGER.info("ATTENTION: Starting Teams Sync")
+    # Refreshing token at the start of Teams
+    Context.asana.refresh_access_token()
     opt_fields = ",".join(self.fields)
     for workspace in Context.asana.client.workspaces.find_all(opt_fields="gid,is_organization"):
       if workspace.get('is_organization', False) == True:

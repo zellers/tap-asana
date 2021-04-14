@@ -1,4 +1,4 @@
-
+import singer
 from singer import utils
 from tap_asana.context import Context
 from tap_asana.streams.base import Stream
@@ -56,6 +56,9 @@ class Stories(Stream):
 
 
   def get_objects(self):
+    LOGGER = singer.get_logger()
+    LOGGER.info("ATTENTION: Starting Stories Sync")
+
     bookmark = self.get_bookmark()
     session_bookmark = bookmark
     opt_fields = ",".join(self.fields)

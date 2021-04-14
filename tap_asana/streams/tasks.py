@@ -51,6 +51,7 @@ class Tasks(Stream):
         "workspace"
     ]
     start_time = None
+    task_history = {}
 
     def get_objects(self):
         LOGGER = singer.get_logger()
@@ -72,6 +73,7 @@ class Tasks(Stream):
             for project in projects:
                 all_projects_gid.append(project["gid"])
 
+        # For every Project ID, get all tasks and subtasks
         for p_gid in all_projects_gid:
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields,
                                   modified_since=modified_since)
@@ -81,7 +83,8 @@ class Tasks(Stream):
                 self.timer_check() # check if need to refresh token
                 task_list.append(task["gid"])
                 session_bookmark = self.get_updated_session_bookmark(session_bookmark, task[self.replication_key])
-                if self.is_bookmark_old(task[self.replication_key]):
+                if self.is_bookmark_old(task[self.replication_key]) and task["gid"] not in self.task_history.keys():
+                    self.task_history[task["gid"]] = True
                     yield task
 
             all_subtasks_ids = []
@@ -94,7 +97,8 @@ class Tasks(Stream):
                         subtask = Context.asana.client.tasks.find_by_id(task_id)
                         session_bookmark = self.get_updated_session_bookmark(session_bookmark,
                                                                              subtask[self.replication_key])
-                        if self.is_bookmark_old(subtask[self.replication_key]):
+                        if self.is_bookmark_old(subtask[self.replication_key]) and subtask["gid"] not in self.task_history.keys():
+                            self.task_history[subtask["gid"]] = True
                             yield subtask
                     except Exception as e:
                         LOGGER.info("Skipping a subtask, exception occurred")
