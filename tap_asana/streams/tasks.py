@@ -56,6 +56,7 @@ class Tasks(Stream):
     def get_objects(self):
         LOGGER = singer.get_logger()
         LOGGER.info("ATTENTION: Starting Tasks Sync")
+
         bookmark = self.get_bookmark()
         session_bookmark = bookmark
         modified_since = bookmark.strftime("%Y-%m-%dT%H:%M:%S.%f")
