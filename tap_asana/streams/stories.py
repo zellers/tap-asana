@@ -79,6 +79,7 @@ class Stories(Stream):
 
         # For every Project ID, get all tasks and subtasks, yield their stories
         for p_gid in all_projects_gid:
+            LOGGER.info(p_gid)
             tasks = self.call_api("tasks", project=p_gid, opt_fields=opt_fields)
 
             task_list = []
