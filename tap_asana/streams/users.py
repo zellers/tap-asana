@@ -20,6 +20,9 @@ class Users(Stream):
     LOGGER = singer.get_logger()
     LOGGER.info("ATTENTION: Starting Users Sync")
 
+    # Refreshing token at the start of Teams
+    Context.asana.refresh_access_token()
+
     opt_fields = ",".join(self.fields)
     for workspace in self.call_api("workspaces"):
       for user in self.call_api("users", workspace=workspace["gid"], opt_fields=opt_fields):

@@ -25,6 +25,10 @@ class Tags(Stream):
   def get_objects(self):
     LOGGER = singer.get_logger()
     LOGGER.info("ATTENTION: Starting Tags Sync")
+
+    # Refreshing token at the start of Teams
+    Context.asana.refresh_access_token()
+
     opt_fields = ",".join(self.fields)
     bookmark = self.get_bookmark()
     session_bookmark = bookmark
