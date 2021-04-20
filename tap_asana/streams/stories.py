@@ -123,14 +123,6 @@ class Stories(Stream):
                         LOGGER.info(e)
                         Context.asana.refresh_access_token()
 
-        # for workspace in self.call_api("workspaces"):
-        #   for project in self.call_api("projects", workspace=workspace["gid"]):
-        #     for task in self.call_api("tasks", project=project["gid"]):
-        #       task_gid = task.get('gid')
-        #       for story in Context.asana.client.stories.get_stories_for_task(task_gid=task_gid, opt_fields=opt_fields):
-        #         session_bookmark = self.get_updated_session_bookmark(session_bookmark, story[self.replication_key])
-        #         if self.is_bookmark_old(story[self.replication_key]):
-        #           yield story
         self.update_bookmark(session_bookmark)
 
     def get_all_tasks(self, task_list, all_subtasks_ids):
