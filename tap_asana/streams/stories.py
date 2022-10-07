@@ -141,7 +141,7 @@ class Stories(Stream):
     def timer_check(self):
         LOGGER = singer.get_logger()
         if (time.time() - self.start_time) > 1800:
-            LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+            LOGGER.info("ATTENTION: 30 min passed in stories, refreshing token")
             Context.asana.refresh_access_token()
             self.start_time = time.time()
 

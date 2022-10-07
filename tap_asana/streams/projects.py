@@ -55,7 +55,7 @@ class Projects(Stream):
       for project in Context.asana.client.projects.find_all(workspace=workspace["gid"], opt_fields=opt_fields):
 
         if (time.time() - start_timer) > 1800:
-          LOGGER.info("ATTENTION: 30 min passed, refreshing token")
+          LOGGER.info("ATTENTION: 30 min passed in projects, refreshing token")
           Context.asana.refresh_access_token()
           start_timer = time.time()  # start timer over
 
